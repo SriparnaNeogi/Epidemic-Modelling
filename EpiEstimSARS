@@ -1,0 +1,35 @@
+data("SARS2003")
+
+plot(SARS2003$incidence, type="l")
+barplot(SARS2003$incidence)
+df = SARS2003$incidence
+View(df)
+
+## estimate the reproduction number (method "non_parametric_si")
+# si_distr = Vector of probabilities giving the discrete distribution of the serial interval
+res <- estimate_R(SARS2003$incidence, method="non_parametric_si",
+                  config = make_config(list(
+                    t_start = seq(14, 101), 
+                    t_end = seq(20, 107),
+                    si_distr = SARS2003$si_distr)))
+res
+plot(res)
+## the second plot produced shows, at each each day,
+## the estimate of the reproduction number
+## over the 7-day window finishing on that day.
+# }
+
+#WT estimates the case reproduction number of an epidemic, given the incidence time series and the serial interval distribution.
+
+wt = wallinga_teunis(SARS2003$incidence, method = c("non_parametric_si"),
+                config = make_config(list(
+                  t_start = seq(14, 101), 
+                  t_end = seq(20, 107),
+                  si_distr = SARS2003$si_distr)))
+
+plot(wt)
+
+#OI computes the overall infectivity due to previously infected individuals.
+
+oi =overall_infectivity(SARS2003$incidence, si_distr= SARS2003$si_distr)
+View(oi)
